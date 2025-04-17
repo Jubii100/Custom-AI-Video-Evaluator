@@ -1,0 +1,11 @@
+Vision Transformer (ViT/DeiT) – tiny variants – For sequences of visual frame embeddings, the Vision Transformer architecture is directly relevant. ViT uses an encoder-only Transformer to aggregate a sequence of patch embeddings from an image, using a learned class token to produce a single output embedding (for classification)​
+huggingface.co
+. Data-efficient training variants (DeiT) introduced small models: DeiT-Tiny, for instance, has ~5 million parameters (hidden size ~192, 12 layers, 3 attention heads)​
+arxiv.org
+. Despite its small size, DeiT-Tiny achieved about 72% top-1 accuracy on ImageNet​
+arxiv.org
+​
+arxiv.org
+, indicating it can learn non-trivial representations. In your scenario, you can treat each frame embedding (768-dim) analogous to an “image patch embedding”. A lightweight ViT-style encoder would first linearly project each 768-dim frame vector to a lower dimension (e.g. 128 or 192), add a positional encoding for frame index, and include a prepended learnable [CLS] token. After several self-attention layers (perhaps 2–4 layers for a very small model), the [CLS] token’s output can serve as the 128-dim representation of the whole sequence. This approach natively learns contextual and positional relations (the pos embedding or relative attention provides ordering info). Open-source implementations exist (e.g. Facebook’s DeiT in PyTorch​
+huggingface.co
+ and Hugging Face’s ViTModel/DeiTModel classes, which also have TensorFlow versions). Adapting the sequence length to 64 or 192 frames is only a matter of ensuring the positional encoding (or attention mask) covers that length. ViT architectures are a good fit for low-data settings if pre-trained weights are used (since ViTs otherwise need a lot of data); e.g. you could use a pretrained DeiT-Tiny and fine-tune it on your frame sequence task by replacing its input patch projection with your frame features.

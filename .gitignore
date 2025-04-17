@@ -1,0 +1,20 @@
+# ignore all log files
+*.log
+
+# ignore all npy files
+*.npy
+
+# ignore the build/ and dist/ folders
+downloaded_videos/
+downloaded_videos (Copy)/
+downloaded_videos-old/
+video_frames/
+vid_eval_venv/
+__pycache__/
+
+# ignore any .env file
+.env
+
+# ignore OS‑ or editor‑specific artifacts
+.DS_Store
+*.swp
